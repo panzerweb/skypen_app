@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import Homepage from "./core/layout/Homepage.vue";
+import { RouterView } from "vue-router";
 </script>
 
 <template>
-  <main>
-    <Homepage />
+  <main class="min-h-screen w-full">
+    <RouterView />
   </main>
 </template>
