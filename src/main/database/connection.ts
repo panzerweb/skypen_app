@@ -21,7 +21,7 @@ export function initializeDatabase(): void {
     fileMustExist: false,
   });
 
-  database.pragma("journel_mode = WAL");
+  database.pragma("journal_mode = WAL");
   database.pragma("foreign_keys = ON");
 
   database.exec(`

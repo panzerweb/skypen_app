@@ -43,7 +43,7 @@ export const worldRepository = {
     const db = getDatabase();
 
     const world: World = {
-      id: randomUUID(),
+      id: randomUUID().toString(),
       name: data.name,
       description: data.description,
       createdAt: new Date().toISOString(),
@@ -53,7 +53,7 @@ export const worldRepository = {
       db.prepare(
         `
             INSERT INTO worlds (id, name, description, created_at)
-            VALUES (?, ?, ?)    
+            VALUES (?, ?, ?, ?)    
         `,
       ).run(world.id, world.name, world.description, world.createdAt);
     });
@@ -64,7 +64,7 @@ export const worldRepository = {
   },
 
   //   Updating a world
-  updateWorld(data: WorldUpdatePayload): void {
+  updateWorld(data: WorldUpdatePayload): World | undefined {
     if (data.id === undefined || data.id === null) {
       throw new Error("Cannot update world without an id");
     }
@@ -78,7 +78,7 @@ export const worldRepository = {
     );
 
     if (validKeys.length == 0) {
-      return;
+      return undefined;
     }
 
     const setClause = validKeys.map((key) => `${key} = @${key}`).join(", ");
@@ -90,6 +90,16 @@ export const worldRepository = {
         WHERE id = @id
         `,
     ).run(data);
+
+    const world = db
+      .prepare(
+        `SELECT id, name, description, created_at as createdAt
+        FROM worlds
+        WHERE id = ?`,
+      )
+      .get(data.id) as World | undefined;
+
+    return world;
   },
 
   //   Deleting a world

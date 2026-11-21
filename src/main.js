@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-import { initializeDatabase } from './main/database/connection';
+import { getDatabase, initializeDatabase } from './main/database/connection';
 import { registerWorldHandlers } from './main/features/worlds/ipc/world_handlers';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -30,6 +30,8 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  return mainWindow
 };
 
 // This method will be called when Electron has finished
@@ -37,6 +39,9 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   initializeDatabase();
+
+  const db = getDatabase();
+  console.log(db.pragma("table_info(worlds)"));
 
   const mainWindow = createWindow()
 
