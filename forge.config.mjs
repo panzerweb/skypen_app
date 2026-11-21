@@ -29,7 +29,7 @@ const config = {
           target: 'main',
         },
         {
-          entry: 'src/preload.js',
+          entry: 'src/preload.ts',
           config: 'vite.preload.config.mjs',
           target: 'preload',
         },
